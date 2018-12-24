@@ -1,0 +1,38 @@
+from urllib.request import Request,urlopen
+import csv
+import datetime
+
+#constants 
+#file_path
+INPUT_FILE = "##Input CSV file##"
+OUTPUT_FILE = "##output path##"
+
+Count = 0
+
+def hitUrl(url):
+	query = Request(url)
+	#query.add_header('User-Agent','Buck/2.2; (+https://app.hypefactors.com/media-monitoring/about.html)')
+	response = urlopen(query)
+	Response = str(sendRequiredResponse(response))
+	return Response
+	
+def sendRequiredResponse(response):
+	Response = response.read()
+	return Response
+	
+def readResponse():
+	global Count
+	input_file = open(INPUT_FILE, 'r')
+	csvFile = csv.reader(input_file)
+	for row in csvFile:
+		Response = hitUrl(row[0])	
+		writeToFile(row[0],Response)
+		Count= Count+1
+		
+def writeToFile(url,Response):
+	global Count
+	output_file = open(OUTPUT_FILE + str(Count) + ".txt", 'w+')
+	output_file.write(str(Response))
+	output_file.close()
+	
+readResponse()
